@@ -38,3 +38,47 @@ DROP TABLES `minions`;
 DROP TABLES `towns`;
 
 
+CREATE TABLE `people`(
+	`id` INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(200) NOT NULL,
+    `picture` BLOB,
+    `height` FLOAT(5, 2),
+    `weight` FLOAT(5, 2),
+    `gender` CHAR(1) NOT NULL,
+    `birthdate` DATE NOT NULL,
+    `biography` TEXT
+);
+INSERT INTO `people` VALUES
+(1,'bob', null,'2.5','1.2','m','2021-01-01',null),
+(2,'bobi', null,'2.5','1.2','m','2021-01-01',null),
+(3,'bobii', null,'2.5','1.2','m','2021-01-01',null),
+(4,'bob1', null,'2.5','1.2','m','2021-01-01',null),
+(5,'bob2', null,'2.5','1.2','m','2021-01-01',null);
+
+
+CREATE TABLE `users`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`username` VARCHAR(30),
+`password` VARCHAR(26),
+`profile_picture` BLOB,
+`last_login_time` DATETIME,
+`is_deleted` BOOL
+);
+INSERT INTO `users` VALUES
+(1,'BAMBI','123',NULL,'2021-01-01 00:00:01',false),
+(2,'BAMBI1','1231',NULL,NULL,false),
+(3,'BAMBI12','1232',NULL,NULL,false),
+(4,'BAMBI32','1233',NULL,NULL,true),
+(5,'BAMBI333','1234',NULL,'2021-01-01 01:00:01',true);
+
+
+ALTER TABLE `users`
+DROP primary key,
+ADD CONSTRAINT pk_users
+PRIMARY KEY (`id`,`username`);
+
+
+ALTER TABLE `users` 
+CHANGE COLUMN `last_login_time` `last_login_time` DATETIME NULL DEFAULT NOW();
+
+
