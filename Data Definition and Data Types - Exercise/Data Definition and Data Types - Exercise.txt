@@ -82,3 +82,241 @@ ALTER TABLE `users`
 CHANGE COLUMN `last_login_time` `last_login_time` DATETIME NULL DEFAULT NOW();
 
 
+10.
+
+
+11.
+CREATE TABLE `directors`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`director_name` VARCHAR(30) NOT NULL,
+`notes` TEXT
+);
+INSERT INTO `directors` (`director_name`) VALUES
+('BOBBU'),
+('DONI'),
+('BOB'),
+('DON'),
+('ANI');
+
+CREATE TABLE `genres`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`genre_name` VARCHAR(30) NOT NULL,
+`notes` TEXT
+);
+INSERT INTO `genres` (`genre_name`) VALUES
+('BOBBU'),
+('DONI'),
+('BOB'),
+('DON'),
+('ANI');
+
+CREATE TABLE `categories`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`category_name` VARCHAR(30) NOT NULL,
+`notes` TEXT
+);
+INSERT INTO `categories` (`category_name`) VALUES
+('BOBBU'),
+('DONI'),
+('BOB'),
+('DON'),
+('ANI');
+
+CREATE TABLE `movies`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`title` VARCHAR(30) NOT NULL,
+`director_id` INT (30),
+`copyright_year` YEAR,
+`length` TIME,
+`genre_id` INT (30),
+`category_id` INT (30),
+`rating` DOUBLE (3,2),
+`notes` TEXT
+);
+INSERT INTO `movies` (`title`) VALUES
+('HELL'),
+('MOTORS'),
+('LOVE'),
+('TRACKS'),
+('ANI');
+
+
+12.
+CREATE TABLE `categories`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`category` VARCHAR(30) NOT NULL,
+`daily_rate` DOUBLE(3,2),
+`weekly_rate` DOUBLE(3,2),
+`monthly_rate` DOUBLE(3,2),
+`weekend_rate` DOUBLE(3,2)
+);
+INSERT INTO `categories` (`category`) VALUES
+('HELL'),
+('MOTORS'),
+('LOVE');
+
+CREATE TABLE `cars`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`plate_number` VARCHAR(8) NOT NULL,
+`make` VARCHAR(30) NOT NULL,
+`model` VARCHAR(30) NOT NULL,
+`car_year` YEAR,
+`category_id` INT,
+`doors` INT,
+`picture` BLOB,
+`car_condition` BOOL,
+`available` BOOL
+);
+INSERT INTO `cars` (`plate_number`,`make`,`model`) VALUES
+('HE1232LL','HELL','HELL'),
+('MO1232RS','HELL','LOVE'),
+('LO3455VE','HELL','LOVE');
+
+CREATE TABLE `employees`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`first_name` VARCHAR(30) NOT NULL,
+`last_name` VARCHAR(30) NOT NULL,
+`title` VARCHAR(30),
+`notes` TEXT
+);
+INSERT INTO `employees` (`first_name`,`last_name`) VALUES
+('HELL','HELL'),
+('HELL','LOVE'),
+('HELL','LO');
+
+CREATE TABLE `customers`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`driver_licence_number` VARCHAR(10) NOT NULL,
+`full_name` VARCHAR(30) NOT NULL,
+`address` VARCHAR(30),
+`city` VARCHAR(15),
+`zip_code` INT(4),
+`notes` TEXT
+);
+INSERT INTO `customers` (`driver_licence_number`,`full_name`) VALUES
+('243243','HELL HELL'),
+('656757','HELL LOVE'),
+('768768','HELL LO');
+
+CREATE TABLE `rental_orders`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`employee_id`INT,
+`customer_id`INT,
+`car_id`INT,
+`car_condition` BOOL,
+`tank_level` DOUBLE,
+`kilometrage_start` INT,
+`kilometrage_end` INT,
+`total_kilometrage` INT,
+`start_date` DATE,
+`end_date` DATE,
+`total_days` INT,
+`rate_applied` DOUBLE,
+`tax_rate` DECIMAL,
+`order_status` VARCHAR(10),
+`notes`TEXT
+);
+INSERT INTO `rental_orders` (`tank_level`,`kilometrage_start`,`kilometrage_end`,`start_date`) VALUES
+(12.4,10,30,'2000-10-05'),
+(41.5,50,80,'2000-12-25'),
+(45.25,100,1000,'2000-11-15');
+
+
+13.
+CREATE DATABASE `soft_uni`;
+USE `soft_uni`;
+
+CREATE TABLE `towns`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE `addresses`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`address_text` VARCHAR(30) NOT NULL,
+`town_id` INT
+);
+
+CREATE TABLE `departments`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE `employees`(
+`id`INT PRIMARY KEY AUTO_INCREMENT,
+`first_name` VARCHAR(30) NOT NULL,
+`middle_name` VARCHAR(30) NOT NULL,
+`last_name` VARCHAR(30) NOT NULL,
+`job_title` VARCHAR(30),
+`department_id` INT,
+`hire_date` DATE,
+`salary` DECIMAL(10,2) NOT NULL,
+`address_id` INT
+);
+
+ALTER TABLE `addresses` 
+ADD CONSTRAINT `fk_towns_adress`
+  FOREIGN KEY (`town_id`)
+  REFERENCES `towns` (`id`);
+  
+ALTER TABLE `employees` 
+ADD CONSTRAINT `fk_adress_employees`
+  FOREIGN KEY (`address_id`)
+  REFERENCES `addresses` (`id`),
+  ADD CONSTRAINT `fk_departments_employees`
+  FOREIGN KEY (`department_id`)
+  REFERENCES `departments` (`id`);
+  
+INSERT INTO `towns` (`name`) VALUES
+('Sofia'),
+('Plovdiv'),
+('Varna'),
+('Burgas');
+
+INSERT INTO `departments` (`name`) VALUES
+('Engineering'),
+('Sales'),
+('Marketing'),
+('Software Development'),
+('Quality Assurance');
+
+INSERT INTO `employees` VALUES
+(1,'Ivan','Ivanov','Ivanov','.NET Developer',4,'2013-02-01',3500,null),
+(2,'Petar','Petrov','Petrov','Senior Engineer',1,'2004-03-02',4000,null),
+(3,'Maria','Petrova','Ivanova','Intern',5,'2016-08-28',525.25,null),
+(4,'Georgi','Terziev','Ivanov','CEO',2,'2007-12-09',3000,null),
+(5,'Peter','Pan','Pan','Intern',3,'2016-08-28',599.88,null);
+
+
+14.
+ SELECT * FROM `towns`;
+ SELECT * FROM `departments`;
+ SELECT * FROM `employees`;
+
+
+15.
+SELECT * FROM `towns`
+ORDER BY `name`;
+SELECT * FROM `departments`
+ORDER BY `name`;
+SELECT * FROM `employees`
+ORDER BY `salary` DESC;
+
+
+16.
+SELECT `name` FROM `towns`
+ORDER BY `name`;
+SELECT `name` FROM `departments`
+ORDER BY `name`;
+SELECT `first_name`,`last_name`,`job_title`,`salary`  FROM `employees`
+ORDER BY `salary` DESC;
+
+
+17.
+UPDATE `employees`
+SET `salary`= `salary` * 1.1;
+SELECT `salary`  FROM `employees`;
+
+
+18.
+DELETE FROM `occupancies`;
