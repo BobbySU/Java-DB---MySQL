@@ -1,0 +1,82 @@
+1.
+SELECT first_name, last_name FROM employees
+WHERE first_name regexp '^Sa'
+ORDER BY employee_id;
+
+
+2.
+SELECT first_name, last_name FROM employees
+WHERE last_name regexp 'ei'
+ORDER BY employee_id;
+
+
+3.
+SELECT first_name FROM employees
+WHERE department_id IN (3 , 10) AND
+YEAR(hire_date) BETWEEN 1995 AND 2005
+ORDER BY employee_id;
+
+
+4.
+SELECT first_name, last_name FROM employees
+WHERE job_title NOT LIKE '%engineer%'
+ORDER BY employee_id;
+
+
+5.
+SELECT `name` FROM towns
+WHERE `name` LIKE '_____' OR `name` LIKE '______'
+ORDER BY `name`;
+
+
+6.
+SELECT town_id, `name` FROM towns
+WHERE `name` REGEXP '^[MmKkBbEe]'
+ORDER BY `name`;
+-----------------------------------
+SELECT town_id, `name` FROM towns
+WHERE LOWER(`name`) LIKE 'b%' OR
+LOWER(`name`) LIKE 'e%' OR
+LOWER(`name`) LIKE 'k%' OR
+LOWER(`name`) LIKE 'm%'
+ORDER BY `name`;
+
+
+7.
+SELECT town_id, `name` FROM towns
+WHERE LOWER(`name`) NOT LIKE 'r%' AND
+LOWER(`name`) NOT LIKE 'b%' AND
+LOWER(`name`) NOT LIKE 'd%' 
+ORDER BY `name`;
+--------------------------------------
+SELECT town_id, `name` FROM towns
+WHERE `name` REGEXP '^[^RrBbDd]'
+ORDER BY `name`;
+
+
+8.
+CREATE VIEW v_employees_hired_after_2000 
+AS SELECT first_name, last_name FROM employees
+WHERE YEAR(hire_date) > 2000;
+select * FROM v_employees_hired_after_2000;
+
+
+9.
+SELECT first_name, last_name FROM employees
+WHERE last_name LIKE '_____';
+
+
+10.
+SELECT country_name, iso_code FROM countries
+WHERE country_name LIKE '%A%A%A%'
+ORDER BY iso_code;
+
+
+11.
+SELECT peak_name, river_name, LOWER(concat(peak_name, SUBSTRING(river_name,2)))
+AS 'mix' FROM peaks, rivers
+WHERE RIGHT(peak_name,1) = LEFT(river_name,1)
+ORDER BY mix;
+
+
+12.
