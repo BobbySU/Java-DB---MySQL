@@ -1,1 +1,23 @@
 1.
+SELECT E.employee_id, CONCAT(first_name,' ',last_name) AS full_name, 
+D.department_id, `name` AS department_name FROM employees AS E
+JOIN departments AS D ON E.employee_id = D.manager_id
+ORDER BY E.employee_id
+LIMIT 5;
+
+
+2.
+SELECT T.town_id, `name` AS town_name, address_text FROM towns AS T
+JOIN addresses AS A ON T.town_id = A.town_id
+WHERE `name` LIKE 'San Francisco' OR `name` LIKE 'Sofia' OR `name` LIKE 'Carnation'
+ORDER BY T.town_id, A.address_id;
+
+
+3.
+SELECT employee_id, first_name, last_name, department_id, salary FROM employees
+WHERE manager_id IS NULL;
+
+
+4.
+SELECT COUNT(*) AS 'count' FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);  
