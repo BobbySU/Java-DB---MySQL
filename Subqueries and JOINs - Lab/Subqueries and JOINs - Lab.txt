@@ -11,6 +11,11 @@ SELECT T.town_id, `name` AS town_name, address_text FROM towns AS T
 JOIN addresses AS A ON T.town_id = A.town_id
 WHERE `name` LIKE 'San Francisco' OR `name` LIKE 'Sofia' OR `name` LIKE 'Carnation'
 ORDER BY T.town_id, A.address_id;
+--------------------------------
+SELECT T.town_id, `name` AS town_name, address_text FROM towns AS T
+JOIN addresses AS A ON T.town_id = A.town_id
+WHERE `name` IN ('San Francisco', 'Sofia', 'Carnation')
+ORDER BY T.town_id, A.address_id;
 
 
 3.
