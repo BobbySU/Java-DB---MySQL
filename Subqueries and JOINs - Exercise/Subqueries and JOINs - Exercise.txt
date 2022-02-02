@@ -1,0 +1,104 @@
+1.
+SELECT employee_id, job_title, E.address_id, address_text FROM employees AS E
+JOIN addresses AS A ON E.address_id = A.address_id
+ORDER BY E.address_id
+LIMIT 5;
+
+
+2.
+SELECT first_name, last_name, `name` AS town,	address_text FROM employees AS E
+JOIN addresses AS A ON E.address_id = A.address_id
+JOIN towns AS T ON A.town_id = T.town_id
+ORDER BY first_name, last_name
+LIMIT 5;
+
+
+3.
+SELECT employee_id, first_name, last_name, `name` AS department_name FROM employees AS E
+JOIN departments AS D ON E.department_id = D.department_id
+WHERE `name`LIKE 'Sales'
+ORDER BY employee_id DESC;
+
+
+4.
+SELECT E.employee_id, E.first_name, salary, D.`name` AS department_name FROM employees AS E
+JOIN departments AS D ON E.department_id = D.department_id
+WHERE E.salary > 15000
+ORDER BY E.department_id DESC
+LIMIT 5;
+
+
+5.
+SELECT E.employee_id, E.first_name FROM employees AS E
+LEFT JOIN employees_projects AS EP ON E.employee_id = EP.employee_id
+WHERE EP.employee_id IS NULL
+ORDER BY E.employee_id DESC
+LIMIT 3;
+
+
+6.
+SELECT first_name, last_name, hire_date, D.`name` AS dept_name FROM employees AS E
+JOIN departments AS D ON E.department_id = D.department_id
+WHERE hire_date > 1999-01-01 AND D.`name` IN('Sales','Finance')
+ORDER BY E.hire_date;
+
+
+7.
+SELECT E.employee_id, E.first_name, P.`name` AS project_name FROM employees AS E
+JOIN employees_projects AS EP ON E.employee_id = EP.employee_id
+JOIN projects AS P ON P.project_id = EP.project_id
+WHERE DATE(P.start_date) > '2002-08-13' AND P.end_date IS NULL
+ORDER BY  E.first_name, project_name
+LIMIT 5;
+
+
+8.
+SELECT E.employee_id, E.first_name,  
+IF(YEAR(P.start_date) >= 2005, NULL, P.`name`) AS project_name FROM employees AS E
+JOIN employees_projects AS EP ON E.employee_id = EP.employee_id
+JOIN projects AS P ON P.project_id = EP.project_id
+WHERE E.employee_id = 24
+ORDER BY project_name;
+
+
+9.
+SELECT e.employee_id, e.first_name, e.manager_id, m.first_name AS 'manager_name' FROM employees AS e
+JOIN employees AS m ON e.manager_id = m.employee_id
+WHERE e.manager_id IN (3,7)
+ORDER BY e.first_name;
+
+
+10.
+SELECT e.employee_id, CONCAT(e.first_name, ' ',e.last_name) AS 'employee_name',
+CONCAT(m.first_name, ' ', m.last_name) AS 'manager_name', d.`name` AS 'department_name' 
+FROM employees AS e
+JOIN employees AS m ON e.manager_id = m.employee_id
+JOIN departments AS d ON d.department_id = e.department_id
+ORDER BY e.employee_id
+LIMIT 5;
+
+
+11.
+SELECT AVG(salary) AS 'min_average_salary' FROM employees
+GROUP BY department_id
+ORDER BY min_average_salary
+LIMIT 1;
+
+
+12.
+SELECT c.country_code, m.mountain_range, p.peak_name, p.elevation FROM peaks AS p
+JOIN mountains AS m ON m.id = p.mountain_id
+JOIN mountains_countries AS c ON m.id = c.mountain_id
+WHERE c.country_code LIKE 'BG' AND p.elevation > 2835
+ORDER BY p.elevation DESC;
+
+
+13.
+SELECT c.country_code, COUNT(m.mountain_range) AS 'mountain_range' FROM mountains_countries AS c
+JOIN mountains AS m ON m.id = c.mountain_id
+WHERE c.country_code IN ('BG','RU','US') 
+GROUP BY c.country_code
+ORDER BY mountain_range DESC;
+
+
+14.
