@@ -128,3 +128,40 @@ DELIMITER ;
 
 
 10.
+DELIMITER ### 
+CREATE FUNCTION ufn_calculate_future_value (initial_sum DECIMAL(10,4), rate DOUBLE, years INT)
+RETURNS DECIMAL(10,4)
+DETERMINISTIC 
+BEGIN
+RETURN initial_sum * (POW(1+rate, years));
+END;
+###
+DELIMITER ; 
+
+
+11.
+DELIMITER ### 
+CREATE FUNCTION ufn_calculate_future_value (initial_sum DECIMAL(10,4), rate DOUBLE, years INT)
+RETURNS DECIMAL(10,4)
+DETERMINISTIC 
+BEGIN
+RETURN initial_sum * (POW(1+rate, years));
+END;
+###
+DELIMITER ; 
+
+DELIMITER ### 
+CREATE PROCEDURE usp_calculate_future_value_for_account (account_id INT, rate DECIMAL(10,4))
+BEGIN
+SELECT a.id AS 'account_id', h.first_name, h.last_name, a.balance AS 'current_balance', 
+ufn_calculate_future_value(a.balance, rate, 5) AS 'balance_in_5_years'
+FROM account_holders AS h
+JOIN accounts AS a ON h.id = a.account_holder_id
+WHERE a.id = account_id;
+END;
+###
+DELIMITER ;
+
+
+12.
+
