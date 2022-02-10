@@ -115,4 +115,56 @@ ORDER BY players_count DESC, fan_base DESC;
 
 
 8.
+SELECT MAX(sd.speed) AS max_speed, t.`name` AS town_name FROM towns AS t
+LEFT JOIN stadiums AS s ON t.id = s.town_id
+LEFT JOIN teams AS tm ON s.id = tm.stadium_id
+LEFT JOIN players AS p ON tm.id = p.team_id
+LEFT JOIN skills_data AS sd ON p.skills_data_id = sd.id
+WHERE tm.`name` <> 'Devify'
+GROUP BY t.`name`
+ORDER BY max_speed DESC, town_name;
 
+
+9.
+SELECT c.`name`, (SELECT COUNT(*) FROM players AS p
+JOIN teams AS tm ON tm.id = p.team_id
+JOIN stadiums AS s ON s.id = tm.stadium_id
+JOIN towns AS t ON t.id = s.town_id
+WHERE c.id = t.country_id) AS total_count_of_players,
+(SELECT SUM(p.salary) FROM players AS p
+JOIN teams AS tm ON tm.id = p.team_id
+JOIN stadiums AS s ON s.id = tm.stadium_id
+JOIN towns AS t ON t.id = s.town_id
+WHERE c.id = t.country_id) AS total_sum_of_salaries
+FROM countries AS c
+ORDER BY total_count_of_players DESC, c.`name`;
+
+
+10.
+DELIMITER $$$
+CREATE FUNCTION udf_stadium_players_count (stadium_name VARCHAR(30))
+RETURNS INT
+DETERMINISTIC 
+BEGIN 
+RETURN (SELECT COUNT(*) FROM players AS p 
+JOIN teams AS tm ON tm.id = p.team_id
+JOIN stadiums AS s ON s.id = tm.stadium_id
+WHERE s.`name` LIKE stadium_name);
+END
+$$$
+DELIMITER ;
+
+
+11.
+DELIMITER $$$
+CREATE PROCEDURE udp_find_playmaker (min_dribble_points INT, team_name  VARCHAR(45))
+BEGIN 
+SELECT CONCAT(first_name, ' ', last_name) AS full_name, age, salary, dribbling, speed, tm.`name` AS team_name FROM players AS p 
+JOIN teams AS tm ON tm.id = p.team_id
+JOIN skills_data AS sd ON p.skills_data_id = sd.id
+WHERE tm.`name` LIKE team_name AND dribbling > min_dribble_points AND speed > (SELECT AVG(speed) FROM skills_data)
+ORDER BY speed DESC
+LIMIT 1;
+END
+$$$
+DELIMITER ;
