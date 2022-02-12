@@ -89,3 +89,81 @@ AND CHAR_LENGTH(full_name) > 3;
 
 
 5.
+SELECT make, model, `condition` FROM cars
+ORDER BY id;
+
+
+6.
+SELECT d.first_name, d.last_name, c.make, c.model, c.mileage FROM drivers AS d
+JOIN cars_drivers AS cd ON d.id = cd.driver_id
+JOIN cars AS c ON c.id = cd.car_id
+WHERE  c.mileage IS NOT NULL
+ORDER BY c.mileage DESC, d.first_name;
+
+
+7.
+SELECT c.id AS car_id, c.make, c.mileage, COUNT(co.car_id) AS count_of_courses, ROUND(AVG(bill),2) AS avg_bill FROM cars AS c
+LEFT JOIN courses AS co ON c.id = co.car_id
+GROUP BY c.id
+HAVING count_of_courses != 2
+ORDER BY count_of_courses DESC, c.id;
+
+
+8.
+SELECT full_name, COUNT(co.car_id) AS count_of_cars, SUM(bill) AS total_sum FROM clients AS cl
+JOIN courses AS co ON cl.id = co.client_id
+WHERE full_name LIKE '_a%' 
+GROUP BY cl.id
+HAVING count_of_cars > 1 
+ORDER BY full_name;
+
+
+9.
+SELECT a.`name`, 
+CASE 
+WHEN HOUR(`start`) BETWEEN 6 AND 20 THEN 'Day'
+WHEN HOUR(`start`) >= 21 OR HOUR(`start`) <= 5 THEN 'Night'
+END 
+AS day_time, co.bill, cl.full_name, c.make, c.model, ca.`name` AS category_name 
+FROM courses AS co
+JOIN addresses AS a ON a.id = co.from_address_id
+JOIN clients AS cl ON cl.id = co.client_id
+JOIN cars AS c ON c.id = co.car_id
+JOIN categories AS ca ON ca.id = c.category_id
+ORDER BY co.id;
+
+
+10.
+DELIMITER $$$
+CREATE FUNCTION udf_courses_by_client (phone_num VARCHAR (20))
+RETURNS INT
+DETERMINISTIC 
+BEGIN 
+RETURN (SELECT COUNT(*) FROM courses AS c 
+JOIN clients AS cl ON cl.id = c.client_id
+WHERE cl.phone_number LIKE phone_num);
+END
+$$$
+DELIMITER ;
+
+
+11.
+DELIMITER $$$
+CREATE PROCEDURE udp_courses_by_address (address_name  VARCHAR(100))
+BEGIN 
+SELECT a.`name`, cl.full_name AS full_names, 
+CASE 
+WHEN bill <= 20 THEN 'Low'
+WHEN bill <= 30 THEN 'Medium'
+ELSE 'High'
+END 
+AS level_of_bill, c.make, c.`condition`, ca.`name` AS cat_name FROM courses AS co
+JOIN addresses AS a ON a.id = co.from_address_id
+JOIN clients AS cl ON cl.id = co.client_id
+JOIN cars AS c ON c.id = co.car_id
+JOIN categories AS ca ON c.category_id = ca.id
+WHERE a.`name` LIKE address_name
+ORDER BY c.make, full_names;
+END
+$$$
+DELIMITER ;
